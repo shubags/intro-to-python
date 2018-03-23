@@ -6,7 +6,7 @@ Commented code was a first approach in which the function permute_list
 would compute all possible permutations of elements in a list and then with
 get_lattice_paths_on_grid_size we were going to pick paths without repetition.
 However this solution proved to be inefficient due the complexity behind the
-permutation algorithm, best guess is complexity was O(n*n!).
+permutation algorithm, best guess is complexity grows exponentially.
 
 So a more analytic approach was used, this solution is based on the 
 multinomial formula and the fact that for any grid of size m*n we need exactly
