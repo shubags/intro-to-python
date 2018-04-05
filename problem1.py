@@ -7,11 +7,7 @@ This function calculates the sum of all multiples of 3 or 5 for a N number
 of numbers
 """
 
+from lib import utilities as utl
 
-def sum_if_mult_3_5(num_nums):
-    sum_result = sum([i for i in range(num_nums) if i % 3 == 0 or i % 5 == 0])
-    return sum_result
-
-
-print(sum_if_mult_3_5(1000))
+print(utl.sum_if_mult(1000, [3,5]))
 
