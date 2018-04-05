@@ -1,18 +1,12 @@
-
 """
 Created on Fri Mar 16 22:40:36 2018
 @author: patricio
 
 Description:
 Script used to solve Problem 2 in Project Euler.
-Two functions were defined in order to find solution.
 
-1) sum_if_mult_2: Given a list of numbers this function computes the sum
-    of the numbers in the list that are even.
-    
-2) compute_fibonacci_seq_not_exceed: Computes the terms in the fibonbacci sequence 
+1) compute_fibonacci_seq_not_exceed: Computes the terms in the fibonbacci sequence
     whose value doesn't exceed the max_num paremeter
-
 """
 
 from lib import utilities as utl
