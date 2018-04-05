@@ -29,13 +29,6 @@ import math
 from lib import utilities as utl
 
 
-def multiply(numbers):
-    total = 1
-    for num in numbers:
-        total *= num
-    return total
-
-
 def find_smallest_num(lim_divisor):
     primes = utl.find_all_primes_below(20)
     num_primes = len(primes)
@@ -45,7 +38,7 @@ def find_smallest_num(lim_divisor):
     while primes[i] <= lim:
         exp_vec[i] = math.floor(math.log(lim_divisor)/math.log(primes[i]))
         i += 1
-    smallest_num = multiply([primes[i]**exp_vec[i] for i in range(num_primes)])
+    smallest_num = utl.multiply([primes[i]**exp_vec[i] for i in range(num_primes)])
     return smallest_num
 
 
