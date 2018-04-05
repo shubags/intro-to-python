@@ -9,6 +9,13 @@ def sum_if_mult(nums, div_lst):
     return sum_result
 
 
+def multiply(numbers):
+    total = 1
+    for num in numbers:
+        total *= num
+    return total
+
+
 def find_all_primes_below(n):
     prime_list = [True for i in range(n)]
     p = 2
@@ -29,3 +36,4 @@ def find_all_primes_below(n):
             p += 1
     list_of_primes = [i for i in range(2,n) if prime_list[i] == True]
     return list_of_primes
+
