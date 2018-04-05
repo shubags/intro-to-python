@@ -13,10 +13,10 @@ from lib import utilities as utl
 
 
 def compute_fibonacci_seq_not_exceed(max_num):
-    fib_list = [1,2]
+    fib_list = [1, 2]
     fib_next_term = 0
     while fib_next_term < max_num:
-            fib_next_term = fib_list[len(fib_list)-2] + fib_list[len(fib_list)-1]
+            fib_next_term = fib_list[-2] + fib_list[-1]
             fib_list.append(fib_next_term)
     return fib_list
 
