@@ -15,16 +15,17 @@ Two functions were defined in order to find solution.
 
 """
 
-def sum_if_mult_2(list_of_numbers):
-    sum_result = sum([i for i in list_of_numbers if i%2==0])
-    return sum_result
+from lib import utilities as utl
+
 
 def compute_fibonacci_seq_not_exceed(max_num):
     fib_list = [1,2]
-    while (fib_list[len(fib_list)-1] <  max_num):
+    fib_next_term = 0
+    while fib_next_term < max_num:
             fib_next_term = fib_list[len(fib_list)-2] + fib_list[len(fib_list)-1]
             fib_list.append(fib_next_term)
     return fib_list
 
-print(sum_if_mult_2(compute_fibonacci_seq_not_exceed(4000000)))
+
+print(utl.sum_if_mult(compute_fibonacci_seq_not_exceed(4000000), 2))
 
