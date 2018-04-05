@@ -9,7 +9,7 @@ of numbers
 
 
 def sum_if_mult_3_5(num_nums):
-    sum_result = sum([i for i in range(num_nums) if i%3==0 or i%5==0])
+    sum_result = sum([i for i in range(num_nums) if i % 3 == 0 or i % 5 == 0])
     return sum_result
 
 
