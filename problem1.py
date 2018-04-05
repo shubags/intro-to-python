@@ -9,5 +9,5 @@ of numbers
 
 from lib import utilities as utl
 
-print(utl.sum_if_mult(1000, [3,5]))
+print(utl.sum_if_mult(list(range(1000)), [3, 5]))
 
