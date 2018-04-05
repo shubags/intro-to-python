@@ -34,6 +34,6 @@ def find_all_primes_below(n):
             condition_meet = True
         else:
             p += 1
-    list_of_primes = [i for i in range(2,n) if prime_list[i] == True]
+    list_of_primes = [i for i in range(2, n) if prime_list[i]]
     return list_of_primes
 
