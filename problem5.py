@@ -26,6 +26,7 @@ smallest number that can be divisible from numbers 1 through 'lim_divsor'.
 
 import time
 import math
+from lib import utilities as utl
 
 
 def multiply(numbers):
@@ -35,30 +36,8 @@ def multiply(numbers):
     return total
 
 
-def find_all_primes_below(n):
-    prime_list = [True for i in range(n)]
-    p = 2
-    condition_meet = False
-    while condition_meet is False:
-        nums_crossed = 0
-        if prime_list[p]:
-            for i in range(p*2, n, p):
-                if prime_list[i] is not False:
-                    prime_list[i] = False
-                    nums_crossed += 1
-        # if for thee previous prime all numbers have been crossed (meaning
-        # numbers_crossed variable is equal to 0) then all
-        # remaining numbers are prime
-        if nums_crossed < 1:
-            condition_meet = True
-        else:
-            p += 1
-    list_of_primes = [i for i in range(2,n) if prime_list[i] == True]
-    return list_of_primes
-
-
 def find_smallest_num(lim_divisor):
-    primes = find_all_primes_below(20)
+    primes = utl.find_all_primes_below(20)
     num_primes = len(primes)
     exp_vec = [1]*num_primes
     lim = int(math.sqrt(lim_divisor)+1)
