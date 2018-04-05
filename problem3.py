@@ -8,7 +8,8 @@ For Solving Problem 3 in Project Euler.
 import time
 import math
 
-def prime_factors(n):
+
+def find_prime_factors(n):
     p_list = []
     k = 1
     num = 2
@@ -24,5 +25,5 @@ def prime_factors(n):
 
 
 start = time.time()
-print(max(prime_factors(600851475143)))
+print(max(find_prime_factors(600851475143)))
 print(time.time() - start)
