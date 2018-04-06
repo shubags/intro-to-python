@@ -80,7 +80,7 @@ income_df['cum_freq'] = income_df.groupby(['state','zipcode'])['num_households']
 
 # Creating the lagged column (shift method)
 income_df['prev_cum_freq'] = income_df.cum_freq.shift()
-income_df['prev_cum_freq'][(income_df['income_band'] == '<$25k')] = np.nan
+income_df['prev_cum_freq'][(income_df['income_band'] == '<$25k')] = 0
 
 # Finding number of households for each state,zip_code
 households_df = income_df.groupby(['state','zipcode'])['num_households'].sum().reset_index()
