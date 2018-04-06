@@ -66,8 +66,10 @@ plt.legend()
 week_sls.pivot(index = 'week_ending', columns = 'test_control', values = 'total_sales').plot(subplots = True, sharex = True)
 # Method 2 using matplotlib base
 fig, axes = plt.subplots(ncols=2, sharex=True)
-axes[0].plot(week_sls2.week_ending, week_sls2.test); axes[0].set_title('Test')
-axes[1].plot(week_sls2.week_ending, week_sls2.control); axes[1].set_title('Control')
+axes[0].plot(week_sls2.week_ending, week_sls2.test)
+axes[0].set_title('Test')
+axes[1].plot(week_sls2.week_ending, week_sls2.control, color = 'b')
+axes[1].set_title('Control')
 for ax in fig.axes:
     matplotlib.pyplot.sca(ax)  # Set the current Axes instance to ax.
     plt.xticks(rotation=90)
@@ -79,7 +81,7 @@ aux_df = week_sls.copy()
 aux_df['week_ending'] += pd.DateOffset(days=7)
 aux_df.columns = ['week_ending','test_control', 'prev_sales']
 week_sales_growth = week_sls.merge(aux_df, how='left', on=['week_ending','test_control'])
-week_sales_growth = week_sales_growth[week_sales_growth['prev_sales'].isna() is False]
+week_sales_growth = week_sales_growth[week_sales_growth['prev_sales'].isna() == False]
 week_sales_growth['sales_growth'] = week_sales_growth.eval('(sales - prev_sales)/prev_sales')
 
 # Method 1
