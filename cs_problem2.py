@@ -1,49 +1,17 @@
 import pandas as pd
-import psycopg2
-import re
 import matplotlib
 import matplotlib.pyplot as plt
 import datetime
+from matplotlib import style
+from lib import cs_utilities as utl
 
+style.use('ggplot')
 
-def get_df(query):
-    creds = {
-            "user": "interview",
-            "password": "i_believe_in_science",
-            "host": "ds-psql.a.ki",
-            "port": "5432",
-            "database": "ds"
-             }
-    connection_string = "dbname='{db}' port='{port}' user='{user}' password='{password}' host='{host}'"
-    connection_string = connection_string.format(host=creds['host'],\
-                                                 db=creds['database'],\
-                                                 user=creds['user'],\
-                                                 port=creds['port'],\
-                                                 password=creds['password'])
-    connection = psycopg2.connect(connection_string)
-    connection.autocommit = True
-
-    cursor = connection.cursor()
-    query = re.sub('[\n\t]', ' ', query)
-    cursor.execute(query)
-    data = cursor.fetchall()
-    if data:
-        colnames = [desc[0] for desc in cursor.description]
-        cursor.close()
-        connection.close()
-        df = pd.DataFrame(data)
-        df.columns = colnames
-        return df
-    else:
-        return None
-
-
-sales_df = get_df("SELECT * FROM sales")
+sales_df = utl.get_df("SELECT * FROM sales")
 
 # ##################################### #
 # Plotting several charts using pyplot #
 # ################################### #
-matplotlib.style.use('ggplot')
 
 # CHART 1
 
@@ -54,6 +22,7 @@ week_sls = sales_df.groupby(['week_ending','test_control'])['units'].sum().reset
 
 # Method 1 using pandas
 week_sls.pivot(index='week_ending', columns='test_control', values='total_sales').plot()
+
 # Method 2 using matplotlib base
 week_sls2 = week_sls.pivot(index='week_ending', columns='test_control', values='total_sales').reset_index()
 plt.plot(week_sls2.week_ending, week_sls2.test, label='test')
@@ -64,8 +33,8 @@ plt.legend()
 
 # Method 1 using Pandas
 week_sls.pivot(index = 'week_ending', columns = 'test_control', values = 'total_sales').plot(subplots = True, sharex = True)
-# Method 2 using matplotlib base
-fig, axes = plt.subplots(ncols=2, sharex=True)
+# Method 2 using matplotlib base and simulating facet_wrap() in R
+fig, axes = plt.subplots(ncols=2)
 axes[0].plot(week_sls2.week_ending, week_sls2.test)
 axes[0].set_title('Test')
 axes[1].plot(week_sls2.week_ending, week_sls2.control, color = 'b')
