@@ -62,5 +62,5 @@ def plot_linear_model(lin_mod):
 
     ax4 = fig.add_subplot(2, 2, 4)  # (+, -)
     sm.graphics.influence_plot(lin_mod, criterion='Cooks', size=2, ax=ax4)
-
     plt.tight_layout()
+    return plt.show()
