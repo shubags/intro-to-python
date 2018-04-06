@@ -102,7 +102,7 @@ aux_df = pd.DataFrame({'income_band': bands, 'bins_range': bins_range,
 # Merging all the new dataframes in order to get the data to compute the medians
 income_df = income_df.merge(households_df, how = 'left', on = ['state', 'zipcode'])
 income_df['ind_median_bin'] = (income_df['half_tot_households'] > income_df['prev_cum_freq']) & \
-                              (income_df['half_tot_households'] < income_df['cum_freq'])
+                              (income_df['half_tot_households'] <= income_df['cum_freq'])
 median_df = income_df[(income_df['ind_median_bin'] == True)]
 
 
