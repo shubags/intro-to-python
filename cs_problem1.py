@@ -1,60 +1,27 @@
 import pandas as pd
 import numpy as np
-import psycopg2
-import re
 import matplotlib
+from matplotlib import style
+from lib import cs_utilities as utl
 
-matplotlib.style.use('ggplot')
-
-
-def get_df(query):
-    creds = {
-            "user": "interview",
-            "password": "i_believe_in_science",
-            "host": "ds-psql.a.ki",
-            "port": "5432",
-            "database": "ds"
-             }
-    connection_string = "dbname='{db}' port='{port}' user='{user}' password='{password}' host='{host}'"
-    connection_string = connection_string.format(host=creds['host'],\
-                                                 db=creds['database'],\
-                                                 user=creds['user'],\
-                                                 port=creds['port'],\
-                                                 password=creds['password'])
-    connection = psycopg2.connect(connection_string)
-    connection.autocommit = True
-
-    cursor = connection.cursor()
-    query = re.sub('[\n\t]', ' ', query)
-    cursor.execute(query)
-    data = cursor.fetchall()
-    if data:
-        colnames = [desc[0] for desc in cursor.description]
-        cursor.close()
-        connection.close()
-        df = pd.DataFrame(data)
-        df.columns = colnames
-        return df
-    else:
-        return None
+style.use('ggplot')
     
-    
-income_df = get_df("SELECT * FROM zipcode_income")
+income_df = utl.get_df("SELECT * FROM zipcode_income")
 
-# Setting income_band as catagorical variable
+# Setting income_band as categorical variable
 bands = income_df['income_band'].unique()
 income_df['income_band'] = income_df.income_band.astype('category', categories=bands, ordered=True)
 
-##################
-#### Plotting ###
-#################
+'''
+Plotting
+'''
 
 plot_df = income_df[(income_df['state'] == 'AK') & (income_df['zipcode'] == '00000')].copy()
 plot_df['cum_freq'] = plot_df['num_households'].cumsum()
 plot_df['rel_cum_freq'] = plot_df['cum_freq']/plot_df['num_households'].sum()
 
 # Building the plot and set labels for x-axis
-graph = plot_df.plot(x='income_band', y='rel_cum_freq')
+graph = plot_df.plot(x='income_band', y='rel_cum_freq', label='Cumulative Frequency')
 graph.axes.set_xticklabels(bands)
 # vertical lines
 graph.axvline(0, color='b', linestyle='--')
@@ -68,9 +35,9 @@ graph.set_ylabel("Cumulative Frequency")
 graph.set_title("Income Study")
 
 
-#################################
-#### Solving for the median #####
-#################################
+'''
+Solving for the median
+'''
 
 income_df = income_df.sort_values(['state','zipcode','income_band'])
 income_df = income_df.drop(['total_income_millions'], axis=1)
