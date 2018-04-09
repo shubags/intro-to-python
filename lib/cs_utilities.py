@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
+import math
 
 
 def get_df(query):
@@ -64,3 +65,56 @@ def plot_linear_model(lin_mod):
     sm.graphics.influence_plot(lin_mod, criterion='Cooks', size=2, ax=ax4)
     plt.tight_layout()
     return plt.show()
+
+
+def plot_KS_stat(dist1, dist2):
+    dist1 = pd.DataFrame(dist1.value_counts()).sort_index()
+    dist1.columns = ['cuenta']
+    n1 = dist1['cuenta'].sum()
+    dist1['empirical_distr'] = dist1['cuenta'].cumsum()/n1
+
+
+    dist2 = pd.DataFrame(dist2.value_counts()).sort_index()
+    dist2.columns = ['cuenta']
+    n2 = dist2['cuenta'].sum()
+    dist2['empirical_distr'] = dist2['cuenta'].cumsum()/n2
+
+    ks_df = dist1.join(dist2, how='outer', lsuffix='_1', rsuffix='_2')
+    ks_df = ks_df.fillna(method='ffill')
+    ks_df['distr_diff'] = ks_df.eval('empirical_distr_1 - empirical_distr_2')
+    ks_df['distr_diff'] = ks_df['distr_diff'].abs()
+    KS_Statistic = max(ks_df['distr_diff'])
+    ks_info = ks_df[(ks_df['distr_diff'] == KS_Statistic)]
+
+    plt.step(dist1.index, dist1['empirical_distr'], color='r', label='Cumulattive Distribution 1')
+    plt.step(dist2.index, dist2['empirical_distr'], color='b', label='Cumulattive Distribution 2')
+    plt.axvline(x=ks_info.index, color='grey', linestyle='dashed')
+    plt.axhline(y=ks_info.empirical_distr_1.values, color='grey', linestyle='dashed')
+    plt.axhline(y=ks_info.empirical_distr_2.values, color='grey', linestyle='dashed')
+    plt.legend()
+    plt.xlabel('X')
+    plt.ylabel('Cumulative Probability')
+    plt.title('KS Statistic = ' + str(round(KS_Statistic, 3)))
+
+
+def ks_test_2samp(dist1, dist2, significance_level):
+    dist1 = pd.DataFrame(dist1.value_counts()).sort_index()
+    dist1.columns = ['cuenta']
+    n1 = dist1['cuenta'].sum()
+    dist1['empirical_distr'] = dist1['cuenta'].cumsum()/n1
+
+
+    dist2 = pd.DataFrame(dist2.value_counts()).sort_index()
+    dist2.columns = ['cuenta']
+    n2 = dist2['cuenta'].sum()
+    dist2['empirical_distr'] = dist2['cuenta'].cumsum()/n2
+
+    ks_df = dist1.join(dist2, how='outer', lsuffix='_1', rsuffix='_2')
+    ks_df = ks_df.fillna(method='ffill')
+    ks_df['distr_diff'] = ks_df.eval('empirical_distr_1 - empirical_distr_2')
+    ks_df['distr_diff'] = ks_df['distr_diff'].abs()
+    KS_Statistic = max(ks_df['distr_diff'])
+    # ks_info = ks_df[(ks_df['distr_diff'] == KS_Statistic)]
+
+    d_crit = math.sqrt(-0.5 * math.log(significance_level / 2)) * math.sqrt((n1 + n2) / (n1 * n2))
+    return print('Samples come from the same distribution: ' + str(KS_Statistic < d_crit))
