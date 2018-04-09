@@ -90,45 +90,12 @@ store_df.plot.scatter('median_value', 'avg_sales', figsize=(8, 5))
 store_df['avg_sales'].corr(store_df['median_value'], method='pearson')
 
 # So it seems that there's no relation between income and termometer sales
-# but to go further we will check if there are states in which termometer
+# but to go further we will check later if there are states in which termometer
 # sales are higher.
-
-# We will verify if there are any states in which sales are significantly
-# higher.
-
-state_df = store_df.groupby('state')['avg_sales'].mean()
-store_df.groupby('state')['avg_sales'].mean().plot.bar(figsize=(12, 8))
-# store_df.boxplot('avg_sales', by = 'state', figsize = (12, 8))
-
-# From the plot we can be confident that there's difference on average sales
-# per store between states but we can run conduct a one-way ANOVA analysis
-
-import statsmodels.api as sm
-from statsmodels.formula.api import ols
-
-mod = ols('avg_sales ~ state', data=store_df).fit()
-
-aov_table = sm.stats.anova_lm(mod, typ=2)
-print(aov_table)
-
-# We can conclude that there's at least 1 state for whom the average sales
-# per store is higher when compared with other states.
-# My best guess is that states in which sales are higher are the ones that
-# experience the most extreme temperatures (leaning towards lower temperatures)
 
 #####################
 # Regression Model #
 ####################
-state_df = state_df.sort_values(ascending=False)
-wanted_states = state_df.index[0:5]
-
-store_df['top_sales_st'] = store_df['state']
-# We simulate 'not in' expression by putting ~ at the beginning of the filter
-store_df['top_sales_st'][(~store_df['top_sales_st'].isin(wanted_states))] = 'Others'
-# Create dummy variables
-dummies = pd.get_dummies(store_df['top_sales_st'])
-dummies = dummies[wanted_states]
-store_df = pd.concat([store_df, dummies], axis=1)
 
 # Build a regression only with the median_income
 lin_mod = ols(formula="avg_sales ~ median_value",
@@ -178,3 +145,50 @@ plt.show(residsvlevplot)
 ## 4 plots in one window
 
 utl.plot_linear_model(lin_mod)
+
+# We will now verify if there are any states in which sales are significantly
+# higher.
+
+state_df = store_df.groupby('state')['avg_sales'].mean()
+store_df.groupby('state')['avg_sales'].mean().plot.bar(figsize=(12, 8))
+# store_df.boxplot('avg_sales', by = 'state', figsize = (12, 8))
+
+# From the plot we can be confident that there's difference on average sales
+# per store between states but we can run conduct a one-way ANOVA analysis
+
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+
+mod = ols('avg_sales ~ state', data=store_df).fit()
+
+aov_table = sm.stats.anova_lm(mod, typ=2)
+print(aov_table)
+
+# We can conclude that there's at least 1 state for whom the average sales
+# per store is higher when compared with other states.
+# My best guess is that states in which sales are higher are the ones that
+# experience the most extreme temperatures (leaning towards lower temperatures)
+
+''' Dummy Variables
+
+state_df = state_df.sort_values(ascending=False)
+ wanted_states = state_df.index[0:5]
+
+store_df['top_sales_st'] = store_df['state']
+# We simulate 'not in' expression by putting ~ at the beginning of the filter
+store_df['top_sales_st'][(~store_df['top_sales_st'].isin(wanted_states))] = 'Others'
+# Create dummy variables
+dummies = pd.get_dummies(store_df['state'])
+
+store_df = pd.concat([store_df, dummies], axis=1)
+
+'''
+
+# Applying KS Statistic to see differences in sales distribution between states
+
+dist1 = store_df['avg_sales'][store_df['state'] == 'NY']
+dist2 = store_df['avg_sales'][store_df['state'] == 'NJ']
+
+
+utl.plot_KS_stat(dist1, dist2)
+utl.ks_test_2samp(dist1, dist2, 0.01)
