@@ -95,10 +95,6 @@ print ("Percentage of all sales by zipcode and income band")
 print (top_sales_by_location(zip_sales_test, sales_and_hhi))
 
 print ("Based on the analysis above, higher income does not translate into greater sales figures")
-# =============================================================================
-# We also need to look into the number of people per zipcode. Look into the number of units sold per household in zipcode
-# =============================================================================
-
 
 
 
