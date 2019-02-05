@@ -9,7 +9,7 @@ def mult_series_sum(series_target, series_multiple):
     return multiple_sum
 
 
-multiple_list = [3,5]
+multiple_list = [3, 5]
 total_sum = 0
 target = 1000
 
