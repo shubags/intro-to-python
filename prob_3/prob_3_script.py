@@ -10,7 +10,7 @@ def is_even(test_number):
 
 
 def is_factor(dividend, divisor):
-    if dividend % divisor == 0:
+    if dividend % divisor == 0 and divisor > 1:
         return True
     else:
         return False
@@ -32,14 +32,22 @@ def prime_factorization(test_number):
     limit = int(math.sqrt(test_number))
     if is_even(test_number):
         prime_factors.append(2)
-    for i in range(1, limit, 2):
-        if is_factor(test_number, i):
+    i = 1
+    num = test_number
+    while i < limit:
+        i += 1
+        if is_factor(num, i):
+            num = num / i
+            limit = int(math.sqrt(num))
             if is_prime(i):
                 prime_factors.append(i)
+            i = 1
+    if num not in [1, test_number]:
+        prime_factors.append(int(num))
     print('Prime factors: ' + str(prime_factors))
     return prime_factors
 
 
-target_num = 600851475143
+target_num = 12345
 prime_factor_list = prime_factorization(target_num)
 print('The largest prime factor of ' + str(target_num) + ' is ' + str(prime_factor_list[-1]) + '.')
