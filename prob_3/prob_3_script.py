@@ -42,12 +42,12 @@ def prime_factorization(test_number):
             if is_prime(i):
                 prime_factors.append(i)
             i = 1
-    if num not in [1, test_number]:
+    if num not in [1, test_number] and num not in prime_factors:
         prime_factors.append(int(num))
     print('Prime factors: ' + str(prime_factors))
     return prime_factors
 
 
-target_num = 12345
+target_num = 12345678904152687
 prime_factor_list = prime_factorization(target_num)
 print('The largest prime factor of ' + str(target_num) + ' is ' + str(prime_factor_list[-1]) + '.')
